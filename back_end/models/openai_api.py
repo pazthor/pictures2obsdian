@@ -1,15 +1,32 @@
-#%%
-import base64
-import requests
+from typing import Union
+from openai import OpenAI
+from back_end.definitions import OPEN_AI_SYSTEM_PROMPT
 
-# Read an image and encode it in base64
-with open(r"C:\Users\isaac\PycharmProjects\pictures2obsdian\scripts\mistral_math.png", "rb") as img_file:
-    base64_str = base64.b64encode(img_file.read()).decode("utf-8")
+class OpenAIHandler:
+    def __init__(self):
+        self.client = OpenAI()
+        self.initial_prompt = OPEN_AI_SYSTEM_PROMPT
 
-# Make the request
-response = requests.post(
-    "http://0.0.0.0:8000/ocr/process",
-    json={"base64_image": base64_str}
-)
-
-print(response.json())
+    def process_markdown(self, markdown_text: str) -> dict[str, Union[int, str, list]]:
+        try:
+            response = self.client.chat.completions.create(
+                model="gpt-4-turbo",
+                messages=[
+                    {"role": "system", "content": self.initial_prompt},
+                    {"role": "user", "content": markdown_text}
+                ],
+                temperature=0,
+            )
+            return {
+                "status": 200,
+                "message": "",
+                "content": response.choices[0].message.content,
+                "metadata": []
+            }
+        except Exception as e:
+            return {
+                "status": 500,
+                "message": str(e),
+                "content": "",
+                "metadata": []
+            }
