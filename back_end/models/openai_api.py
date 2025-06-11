@@ -20,7 +20,7 @@ class OpenAIHandler:
             return {
                 "status": 200,
                 "message": "",
-                "content": eval(response.choices[0].message.content),
+                "content": eval(response.choices[0].message.content.replace("`","").replace("json","")),
                 "metadata": []
             }
         except Exception as e:

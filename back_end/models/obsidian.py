@@ -38,7 +38,7 @@ class ObsidianHandler:
             markdown_text = markdown_text.replace(image["original_name"], image["new_name"])
 
         # We add the tags at the beggininf of the document
-        formated_tags = " ".join(["#" + x.strip() for x in tags])
+        formated_tags = " ".join(["#" + x.replace(" ","_") for x in tags])
         markdown_doc = f"{formated_tags}\n\n{markdown_text}"
         # save the doc to the tittle
         with open(os.path.join(category_dict, (tittle+".md")), "w") as f:

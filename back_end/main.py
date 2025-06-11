@@ -53,17 +53,18 @@ class MarkdownRequest(BaseModel):
 class MarkdownResponse(BaseModel):
     status: int = Field(..., description="HTTP status code", example=200)
     message: str = Field(..., description="Error message if any", example="")
-    content: str = Field(..., description="Processed markdown analysis",
-                        example='{"Document_tittle": "Sample Title", "document_type": "Tutorial", "Tags": ["tag1", "tag2"]}')
-    metadata: List[str] = Field(default=[], description="Additional metadata if any")
+    title: str = Field(..., description="Extracted document title", example="Sample Title")
+    category: str = Field(..., description="Document category/type", example="Tutorial")
+    tags: List[str] = Field(..., description="Extracted tags", example=["tag1", "tag2"])
 
     class Config:
         json_schema_extra = {
             "example": {
                 "status": 200,
                 "message": "",
-                "content": '{"Document_tittle": "Getting Started with PyTorch", "document_type": "Tutorial", "Tags": ["PyTorch", "Deep Learning", "Machine Learning"]}',
-                "metadata": []
+                "title": "Getting Started with PyTorch",
+                "category": "Tutorial", 
+                "tags": ["PyTorch", "Deep Learning", "Machine Learning"]
             }
         }
 
@@ -94,7 +95,7 @@ app = FastAPI()
 # Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vite's default development server port
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React and Vite dev servers
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -122,7 +123,18 @@ async def process_ocr(request: OCRRequest):
 async def analyze_markdown(request: MarkdownRequest):
     try:
         result = OpenAIHandler().process_markdown(request.markdown_text)
-        return result
+        
+        # Extract the content object from the response
+        content = result.get("content", {})
+        
+        # Map the response to match the new MarkdownResponse structure
+        return {
+            "status": result.get("status", 200),
+            "message": result.get("message", ""),
+            "title": content.get("document_tittle", ""),
+            "category": content.get("document_type", ""),
+            "tags": content.get("tags", [])
+        }
     except Exception as e:
         print("Error during markdown processing:", e)
         raise HTTPException(status_code=500, detail=str(e))
@@ -136,9 +148,6 @@ async def root():
 @app.post("/obsidian/save", response_model=ObsidianResponse)
 async def save_to_obsidian(request: ObsidianRequest):
     try:
-        print(request.markdown_text)
-        print("\\\\")
-        print(request.images)
         ObsidianHandler().write_file_2obsidian(
             markdown_text=request.markdown_text,
             tittle=request.title,  # Note: using 'tittle' as that's what the class expects

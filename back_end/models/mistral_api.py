@@ -8,6 +8,10 @@ class MistralApiHandler:
     def __init__(self):
         self.client=Mistral(api_key=MISTRAL_API_KEY)
 
+    def remove_base64_header(self,base64_string):
+        if base64_string.startswith("data:image"):
+            base64_string = base64_string.split(",")[1]
+        return base64_string
 
     def base64_to_markdown(self,base64_img)->dict[str:Union[int,str,list]]:
 
@@ -16,7 +20,7 @@ class MistralApiHandler:
                 model="mistral-ocr-latest",
                 document={
                     "type": "image_url",
-                    "image_url": f"data:image/jpeg;base64,{base64_img}"
+                    "image_url": f"data:image/jpeg;base64,{self.remove_base64_header(base64_img)}"
                 },
                 include_image_base64=True
             )
