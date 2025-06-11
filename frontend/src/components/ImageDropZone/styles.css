@@ -1,0 +1,110 @@
+.dropzone-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.dropzone {
+  width: 300px;
+  height: 300px;
+  border: 3px dashed #ccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.dropzone:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.dropzone.drag-active {
+  border-color: #007bff;
+  background-color: #e6f3ff;
+  transform: scale(1.02);
+}
+
+.dropzone.drag-reject {
+  border-color: #dc3545;
+  background-color: #ffebee;
+}
+
+.dropzone-content {
+  text-align: center;
+  padding: 20px;
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.dropzone-content p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.dropzone-content small {
+  color: #999;
+  font-size: 12px;
+}
+
+.image-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.preview-image {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.image-name {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.error-message {
+  background-color: #ffebee;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 12px;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 400px;
+}
+
+.error-message p {
+  color: #721c24;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.error-message button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.error-message button:hover {
+  background-color: #c82333;
+}
