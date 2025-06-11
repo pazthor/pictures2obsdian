@@ -1,9 +1,6 @@
 from typing import Union
 
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from definitions import MISTRAL_API_KEY
+from back_end.definitions import MISTRAL_API_KEY
 from mistralai import Mistral
 
 
@@ -46,3 +43,5 @@ class MistralApiHandler:
                     "markdown":markdowm_text,
                     "images":images
         }
+
+

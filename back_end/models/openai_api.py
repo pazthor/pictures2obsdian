@@ -1,9 +1,6 @@
 from typing import Union
 from openai import OpenAI
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from definitions import OPEN_AI_SYSTEM_PROMPT
+from back_end.definitions import OPEN_AI_SYSTEM_PROMPT
 
 class OpenAIHandler:
     def __init__(self):

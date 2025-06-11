@@ -1,8 +1,6 @@
-import sys
+from definitions import OBSIDIAN_DIRECTORY
 import os
 import base64
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from definitions import OBSIDIAN_DIRECTORY
 
 class ObsidianHandler:
     def __init__(self):

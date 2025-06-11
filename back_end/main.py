@@ -6,9 +6,9 @@ import io
 from pydantic import BaseModel,Field
 from typing import List, Optional
 
-from models.mistral_api import MistralApiHandler
-from models.openai_api import OpenAIHandler
-from models.obsidian import ObsidianHandler
+from back_end.models.mistral_api import MistralApiHandler
+from back_end.models.openai_api import OpenAIHandler
+from back_end.models.obsidian import ObsidianHandler
 
 class ImageData(BaseModel):
     img_name: str
@@ -159,4 +159,4 @@ async def save_to_obsidian(request: ObsidianRequest):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
