@@ -1,6 +1,9 @@
 from typing import Union
 from openai import OpenAI
-from back_end.definitions import OPEN_AI_SYSTEM_PROMPT
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from definitions import OPEN_AI_SYSTEM_PROMPT
 
 class OpenAIHandler:
     def __init__(self):
@@ -20,7 +23,7 @@ class OpenAIHandler:
             return {
                 "status": 200,
                 "message": "",
-                "content": response.choices[0].message.content,
+                "content": eval(response.choices[0].message.content),
                 "metadata": []
             }
         except Exception as e:

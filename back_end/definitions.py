@@ -6,6 +6,8 @@ load_dotenv()
 
 
 MISTRAL_API_KEY = os.environ["MISTRAL_API_KEY"]
+OBSIDIAN_DIRECTORY=r"C:\Users\isaac\Documents\api_vault\examples"
+
 OPEN_AI_SYSTEM_PROMPT="""
 You are a helpful assistant designed to analyze or create metadata for Markdown documents. Your task is to do the following:
 
@@ -50,9 +52,9 @@ Expected output:
 ```json
 
 {
-  "Document_tittle": "Getting Started with PyTorch Geometric",
+  "document_tittle": "Getting Started with PyTorch Geometric",
   "document_type": "Tutorial",
-  "Tags": ["PyTorch", "Graph Neural Networks", "Machine Learning", "GNN", "Deep Learning"]
+  "tags": ["PyTorch", "Graph Neural Networks", "Machine Learning", "GNN", "Deep Learning"]
 }
 ```
 

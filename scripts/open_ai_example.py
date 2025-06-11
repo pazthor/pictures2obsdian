@@ -83,7 +83,7 @@ response = client.chat.completions.create(
 print("done")
 #%%
 
-print(response.choices[0].message.content)
+print(eval(response.choices[0].message.content))
 
 
 

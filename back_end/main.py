@@ -1,12 +1,14 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import base64
 import io
 from pydantic import BaseModel,Field
 from typing import List, Optional
 
-from back_end.models.mistral_api import MistralApiHandler
-from back_end.models.openai_api import OpenAIHandler
+from models.mistral_api import MistralApiHandler
+from models.openai_api import OpenAIHandler
+from models.obsidian import ObsidianHandler
 
 class ImageData(BaseModel):
     img_name: str
@@ -66,7 +68,37 @@ class MarkdownResponse(BaseModel):
         }
 
 
+class ObsidianRequest(BaseModel):
+    markdown_text: str = Field(..., description="Markdown text to be saved to Obsidian")
+    title: str = Field(..., description="Title of the document")
+    tags: List[str] = Field(..., description="List of tags for the document")
+    category: str = Field(..., description="Category for document organization")
+    images: List[dict[str,str]] = Field(default=[], description="List of images with base64 data")
+
+
+class ObsidianResponse(BaseModel):
+    status: int = Field(..., description="HTTP status code", example=200)
+    message: str = Field(..., description="Success or error message", example="Document saved successfully")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "status": 200,
+                "message": "Document saved successfully to Obsidian vault"
+            }
+        }
+
+
 app = FastAPI()
+
+# Configure CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vite's default development server port
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 
@@ -101,7 +133,30 @@ async def root():
     return {"message": "Hi"}
 
 
+@app.post("/obsidian/save", response_model=ObsidianResponse)
+async def save_to_obsidian(request: ObsidianRequest):
+    try:
+        print(request.markdown_text)
+        print("\\\\")
+        print(request.images)
+        ObsidianHandler().write_file_2obsidian(
+            markdown_text=request.markdown_text,
+            tittle=request.title,  # Note: using 'tittle' as that's what the class expects
+            tags=request.tags,
+            category=request.category,
+            images=request.images
+        )
+
+        return {
+            "status": 200,
+            "message": f"Document '{request.title}' saved successfully to Obsidian vault"
+        }
+    except Exception as e:
+        print(f"Error saving to Obsidian: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)

@@ -76,11 +76,9 @@ result=response.json()
 #             f.write(markdown_doc)
 #
 #
-# Obsidian().write_file_2obsidian(result["markdown"],"test",["tag1","tag2","tag3"],"Tutorial",result["images"])
 
 obsidian_url = "http://localhost:8000/obsidian/save"
 
-# Create request payload
 obsidian_payload = {
     "markdown_text": result["markdown"],
     "title": "test",
@@ -89,7 +87,6 @@ obsidian_payload = {
     "images": result["images"]
 }
 
-# Send POST request to save to Obsidian
 obsidian_response = requests.post(
     obsidian_url,
     json=obsidian_payload
