@@ -25,10 +25,18 @@ class MistralApiHandler:
                 include_image_base64=True
             )
         except Exception as e:
-            return {"status":e.status_code,
-                    "message":e.message,
-                    "markdown":"",
-                    "images":[]}
+            print(f"Mistral API Error: {e}")
+            # Check if it's an API error with status code
+            if hasattr(e, 'status_code'):
+                return {"status": e.status_code,
+                        "message": f"Mistral API error: {e.message if hasattr(e, 'message') else str(e)}",
+                        "markdown": "",
+                        "images": []}
+            else:
+                return {"status": 500,
+                        "message": f"Unexpected error: {str(e)}",
+                        "markdown": "",
+                        "images": []}
 
         markdowm_text = ocr_response.pages[0].markdown
         images= [
