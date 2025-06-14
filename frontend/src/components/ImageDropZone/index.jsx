@@ -33,15 +33,19 @@ const ImageDropZone = () => {
       });
 
       const ocrResult = await processOCR(base64);
-      actions.setMarkdownContent(ocrResult.markdown || ocrResult.text || '');
+      console.log('OCR Result:', ocrResult);
+      const markdownContent = ocrResult.markdown || ocrResult.text || '';
+      console.log('Setting markdown content:', markdownContent);
+      actions.setMarkdownContent(markdownContent);
       
-      // Store the images from OCR response for later use in Obsidian save
+      // Update imageData with OCR images (preserving existing data)
       if (ocrResult.images && ocrResult.images.length > 0) {
+        // Get current imageData and just add ocrImages to it
         actions.setImageData({
           file,
           base64,
           preview: URL.createObjectURL(file),
-          ocrImages: ocrResult.images // Store the properly formatted images
+          ocrImages: ocrResult.images
         });
       }
       

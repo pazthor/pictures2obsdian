@@ -8,6 +8,8 @@ const MarkdownPane = () => {
   const { state, actions } = useApp();
   const hasAnalyzed = useRef(false);
 
+  console.log('MarkdownPane - state.markdownContent:', state.markdownContent);
+
   useEffect(() => {
     if (state.markdownContent && !state.loading.analysis && !hasAnalyzed.current) {
       const analyzeContent = async () => {

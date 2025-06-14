@@ -126,7 +126,7 @@ async def analyze_markdown(request: MarkdownRequest):
         
         # Extract the content object from the response
         content = result.get("content", {})
-        
+        print(content)
         # Map the response to match the new MarkdownResponse structure
         return {
             "status": result.get("status", 200),
