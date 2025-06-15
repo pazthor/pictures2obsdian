@@ -6,7 +6,7 @@ load_dotenv()
 
 
 MISTRAL_API_KEY = os.environ["MISTRAL_API_KEY"]
-OBSIDIAN_DIRECTORY=r"C:\Users\isaac\Documents\api_vault\examples"
+OBSIDIAN_DIRECTORY=r"api_vault"
 
 OPEN_AI_SYSTEM_PROMPT="""
 You are a helpful assistant designed to analyze or create metadata for Markdown documents. Your task is to do the following:

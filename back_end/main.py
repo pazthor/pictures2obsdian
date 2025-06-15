@@ -1,8 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import base64
 import io
+import os
 from pydantic import BaseModel,Field
 from typing import List, Optional
 
@@ -108,7 +110,7 @@ class ImageRequest(BaseModel):
 class OCRRequest(BaseModel):
     base64_image: str
 
-@app.post("/ocr/process", response_model=OCRResponseDetailed)
+@app.post("/api/ocr/process", response_model=OCRResponseDetailed)
 async def process_ocr(request: OCRRequest):
     try:
         result = MistralApiHandler().base64_to_markdown(request.base64_image)
@@ -119,7 +121,7 @@ async def process_ocr(request: OCRRequest):
 
 
 
-@app.post("/markdown/analyze", response_model=MarkdownResponse)
+@app.post("/api/markdown/analyze", response_model=MarkdownResponse)
 async def analyze_markdown(request: MarkdownRequest):
     try:
         result = OpenAIHandler().process_markdown(request.markdown_text)
@@ -140,12 +142,12 @@ async def analyze_markdown(request: MarkdownRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hi"}
+# @app.get("/")
+# async def root():
+#     return {"message": "Hi"}
 
 
-@app.post("/obsidian/save", response_model=ObsidianResponse)
+@app.post("/api/obsidian/save", response_model=ObsidianResponse)
 async def save_to_obsidian(request: ObsidianRequest):
     try:
         ObsidianHandler().write_file_2obsidian(
@@ -163,6 +165,15 @@ async def save_to_obsidian(request: ObsidianRequest):
     except Exception as e:
         print(f"Error saving to Obsidian: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# Serve static files in production (when React build exists)
+frontend_build_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "build")
+if os.path.exists(frontend_build_path):
+    print(f"Production mode: Serving static files from {frontend_build_path}")
+    app.mount("/", StaticFiles(directory=frontend_build_path, html=True), name="static")
+else:
+    print("Development mode: Static files not served (run 'npm run build' in frontend to enable)")
 
 
 if __name__ == "__main__":

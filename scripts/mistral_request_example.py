@@ -19,13 +19,14 @@ image_path = r"C:\Users\isaac\PycharmProjects\pictures2obsdian\scripts\mistral_m
 base64_image = encode_image(image_path)
 
 # API endpoint
-url = "http://localhost:8000/ocr/process"
+url = "http://localhost:8000/api/ocr/process"
 
 # Send POST request with JSON body instead of query parameters
 response = requests.post(
     url,
     json={"base64_image": base64_image}  # Send as JSON body instead of query parameters
 )
+print(response.json())
 #%%
 # import os
 result=response.json()

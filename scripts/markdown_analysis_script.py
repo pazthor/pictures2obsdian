@@ -6,7 +6,7 @@ This guide introduces the basics of using PyTorch Geometric for graph neural net
 You'll learn how to load datasets, build GNN models, and train them on node classification tasks.
 """
 
-url = "http://localhost:8000/markdown/analyze"
+url = "http://localhost:8001/markdown/analyze"
 
 response = requests.post(
     url,
@@ -17,3 +17,4 @@ response = requests.post(
 result = response.json()
 print("Status:", result["status"])
 print("Content:", result["content"])
+#%%
